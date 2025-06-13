@@ -83,15 +83,15 @@ def user_input(user_question):
             sources.add(f"{doc.metadata['source']} (Page: {doc.metadata['page']})")
     
     reply_text = response["output_text"]
-    if sources:
-        reply_text += "\n\nSources: " + ", ".join(sorted(list(sources)))
+    # if sources:
+    #     reply_text += "\n\nSources: " + ", ".join(sorted(list(sources)))
 
-    st.write("Reply: ", reply_text)
+    st.write("Response: ", reply_text)
 
 
 def main():
     st.set_page_config("Chat PDF")
-    st.header("Chat with PDF using Gemini💁")
+    st.header("Turn Your PDFs into Conversations 📚🗣️")
 
     user_question = st.text_input("Ask a Question from the PDF Files")
 
