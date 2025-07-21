@@ -102,12 +102,12 @@ def user_input(user_question):
     # if sources:
     #     reply_text += "\n\nSources: " + ", ".join(sorted(list(sources)))
 
-    st.write("Response: ", reply_text)
+    st.write("🤖 ", reply_text)
 
 
 def main():
     st.set_page_config("Chat Document")
-    st.header("Turn Your documents into Conversations 📚🗣️")
+    st.header("Turn Your documents into Conversations 📚")
 
     user_question = st.text_input("Ask a Question from the Files")
 
