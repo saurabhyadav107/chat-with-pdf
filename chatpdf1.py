@@ -102,7 +102,18 @@ def user_input(user_question):
     # if sources:
     #     reply_text += "\n\nSources: " + ", ".join(sorted(list(sources)))
 
-    st.write("🤖 ", reply_text)
+    #st.write("🤖  ", reply_text)
+    st.markdown(
+    f"""
+    <div style="display: flex; align-items: flex-start; margin-top: 20px;">
+        <div style="font-size: 36px; margin-right: 10px;">🤖</div>
+        <div style="background-color: #f0f2f6; padding: 12px 16px; border-radius: 10px; max-width: 80%; font-size: 16px;">
+            {reply_text}
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 
 def main():
