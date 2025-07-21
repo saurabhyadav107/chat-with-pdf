@@ -102,7 +102,7 @@ def user_input(user_question):
     # if sources:
     #     reply_text += "\n\nSources: " + ", ".join(sorted(list(sources)))
 
-    st.write("Response: ", reply_text)
+    st.write( reply_text)
 
 
 def main():
