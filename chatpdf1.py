@@ -63,7 +63,7 @@ def get_conversational_chain():
     prompt_template = """
     Answer the question as detailed as possible from the provided context.
     Make sure to provide all the details. If the answer is not in the provided context,
-    just say, "Sorry! I do not have an answer to your question currently. I will pass it on to the HR team."
+    just say, "Answer is not available in the provided documents."
     if the anwer has any refrence of image, then provide the image name and page number in the answer.
     **DO NOT include any file names or page numbers in your answer.**
     Only provide the answer based on the text.
@@ -102,14 +102,12 @@ def user_input(user_question):
     # if sources:
     #     reply_text += "\n\nSources: " + ", ".join(sorted(list(sources)))
 
-    st.write("🤖  ", reply_text)
-    
-)
+    st.write("Response: ", reply_text)
 
 
 def main():
-    st.set_page_config("Chat Document")
-    st.header("Turn Your documents into Conversations 📚")
+    st.set_page_config("Chat PDF")
+    st.header("Turn Your Documents into Conversations 📚")
 
     user_question = st.text_input("Ask a Question from the Files")
 
