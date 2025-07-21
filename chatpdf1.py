@@ -43,7 +43,7 @@ def extract_text_from_files(files):
             documents.append(doc)
         else:
             st.warning(f"Unsupported file format: {file_name}")
-    
+            
     return documents
 
  
@@ -93,26 +93,38 @@ def user_input(user_question):
         {"input_documents":docs, "question": user_question}
         , return_only_outputs=True)
 
-    sources = set()
-    for doc in docs:
-        if 'source' in doc.metadata and 'page' in doc.metadata:
-            sources.add(f"{doc.metadata['source']} (Page: {doc.metadata['page']})")
-    
     reply_text = response["output_text"]
-    # if sources:
-    #     reply_text += "\n\nSources: " + ", ".join(sorted(list(sources)))
-
-    st.write( reply_text)
+    return reply_text
 
 
 def main():
     st.set_page_config("Chat PDF")
     st.header("Turn Your Documents into Conversations 📚")
 
-    user_question = st.text_input("Ask a Question from the Files")
+    # Initialize chat history in session state
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+
+    # Display chat history
+    for message in st.session_state.chat_history:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    user_question = st.chat_input("Ask a Question from the Files")
 
     if user_question:
-        user_input(user_question)
+        # Add user question to chat history
+        st.session_state.chat_history.append({"role": "user", "content": user_question})
+        with st.chat_message("user"):
+            st.markdown(user_question)
+
+        # Get bot response
+        bot_response = user_input(user_question)
+        
+        # Add bot response to chat history
+        st.session_state.chat_history.append({"role": "assistant", "content": bot_response})
+        with st.chat_message("assistant"):
+            st.markdown(bot_response)
 
     with st.sidebar:
         st.title("Menu:")
@@ -124,6 +136,8 @@ def main():
                     text_chunks = get_text_chunks(documents_with_metadata)
                     get_vector_store(text_chunks)
                     st.success("Done")
+                    # Clear chat history when new files are processed
+                    st.session_state.chat_history = [] 
             else:
                 st.warning("Please upload PDF files first!")
 
