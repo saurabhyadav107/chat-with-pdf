@@ -105,7 +105,7 @@ def user_input(user_question):
     #st.write("🤖  ", reply_text)
     st.markdown(
     f"""
-    <div style="display: flex; align-items: flex-start; margin-top: 20px;">
+    
         <div style="font-size: 36px; margin-right: 10px;">🤖</div>
         
             {reply_text}
