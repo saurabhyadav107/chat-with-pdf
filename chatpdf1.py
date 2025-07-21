@@ -2,6 +2,7 @@ import streamlit as st
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import os
+from docx import Document as DocxDocument
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 import google.generativeai as genai
 from langchain_community.vectorstores import FAISS
@@ -16,22 +17,36 @@ os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
-def get_pdf_docs_with_metadata(pdf_docs):
+def extract_text_from_files(files):
     documents = []
-    for pdf in pdf_docs:
-        pdf_reader = PdfReader(pdf)
-        file_name = pdf.name
-        for i, page in enumerate(pdf_reader.pages):
-            text = page.extract_text()
-            if text:
-                doc = Document(
-                    page_content=text,
-                    metadata={"source": file_name, "page": i + 1}
-                )
-                documents.append(doc)
+    for file in files:
+        file_name = file.name
+        if file_name.lower().endswith(".pdf"):
+            pdf_reader = PdfReader(file)
+            for i, page in enumerate(pdf_reader.pages):
+                text = page.extract_text()
+                if text:
+                    doc = Document(
+                        page_content=text,
+                        metadata={"source": file_name, "page": i + 1}
+                    )
+                    documents.append(doc)
+
+        elif file_name.lower().endswith((".doc", ".docx")):
+            file.seek(0)  # Reset file pointer to the beginning
+            docx = DocxDocument(file)
+            full_text = "\n".join([para.text for para in docx.paragraphs])
+            doc = Document(
+                page_content=full_text,
+                metadata={"source": file_name, "page": 1}  # word files are treated as one page here
+            )
+            documents.append(doc)
+        else:
+            st.warning(f"Unsupported file format: {file_name}")
+    
     return documents
 
-
+ 
 def get_text_chunks(documents):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=1000)
     chunks = text_splitter.split_documents(documents)
@@ -49,6 +64,7 @@ def get_conversational_chain():
     Answer the question as detailed as possible from the provided context.
     Make sure to provide all the details. If the answer is not in the provided context,
     just say, "Answer is not available in the provided documents."
+    if the anwer has any refrence of image, then provide the image name and page number in the answer.
     **DO NOT include any file names or page numbers in your answer.**
     Only provide the answer based on the text.
 
@@ -104,7 +120,7 @@ def main():
         if st.button("Submit & Process"):
             if pdf_docs:
                 with st.spinner("Processing..."):
-                    documents_with_metadata = get_pdf_docs_with_metadata(pdf_docs)
+                    documents_with_metadata = extract_text_from_files(pdf_docs)
                     text_chunks = get_text_chunks(documents_with_metadata)
                     get_vector_store(text_chunks)
                     st.success("Done")
