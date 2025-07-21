@@ -106,17 +106,17 @@ def user_input(user_question):
 
 
 def main():
-    st.set_page_config("Chat PDF")
-    st.header("Turn Your PDFs into Conversations 📚🗣️")
+    st.set_page_config("Chat Document")
+    st.header("Turn Your documents into Conversations 📚🗣️")
 
-    user_question = st.text_input("Ask a Question from the PDF Files")
+    user_question = st.text_input("Ask a Question from the Files")
 
     if user_question:
         user_input(user_question)
 
     with st.sidebar:
         st.title("Menu:")
-        pdf_docs = st.file_uploader("Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True)
+        pdf_docs = st.file_uploader("Upload your Files and Click on the Submit & Process Button", accept_multiple_files=True)
         if st.button("Submit & Process"):
             if pdf_docs:
                 with st.spinner("Processing..."):
