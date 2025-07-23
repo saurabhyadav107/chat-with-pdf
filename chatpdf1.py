@@ -99,7 +99,7 @@ def user_input(user_question):
 
 def main():
     st.set_page_config("Chat PDF")
-    st.header("Turn Your Documents into Conversations 📚")
+    st.header("What information are you looking for?")
 
     # Initialize chat history in session state
     if "chat_history" not in st.session_state:
