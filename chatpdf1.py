@@ -110,7 +110,7 @@ def main():
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    user_question = st.chat_input("Ask a Question from the Files")
+    user_question = st.chat_input("Type your question here")
 
     if user_question:
         # Add user question to chat history
